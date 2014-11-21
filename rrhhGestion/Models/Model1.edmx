@@ -1,0 +1,290 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DatosEmpleadosModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Cargo">
+          <Key>
+            <PropertyRef Name="idCargo" />
+          </Key>
+          <Property Name="idCargo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="salarioBase" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Empleado">
+          <Key>
+            <PropertyRef Name="idEmpleado" />
+          </Key>
+          <Property Name="idEmpleado" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="dni" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="idCargo" Type="int" Nullable="false" />
+          <Property Name="salario" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DatosEmpleados.dbo.Menus' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Menus">
+          <Key>
+            <PropertyRef Name="idMenu" />
+            <PropertyRef Name="nombre" />
+            <PropertyRef Name="url" />
+            <PropertyRef Name="controlador" />
+            <PropertyRef Name="accion" />
+            <PropertyRef Name="visible" />
+          </Key>
+          <Property Name="idMenu" Type="int" Nullable="false" />
+          <Property Name="idPadre" Type="int" />
+          <Property Name="nombre" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="url" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="controlador" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="accion" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="visible" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Proyecto">
+          <Key>
+            <PropertyRef Name="idProyecto" />
+          </Key>
+          <Property Name="idProyecto" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="cliente" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="descripcion" Type="ntext" />
+        </EntityType>
+        <EntityType Name="Proyecto_Empleado">
+          <Key>
+            <PropertyRef Name="idProyecto" />
+            <PropertyRef Name="idEmpleado" />
+          </Key>
+          <Property Name="idProyecto" Type="int" Nullable="false" />
+          <Property Name="idEmpleado" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Empleado_Cargo">
+          <End Role="Cargo" Type="Self.Cargo" Multiplicity="1" />
+          <End Role="Empleado" Type="Self.Empleado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cargo">
+              <PropertyRef Name="idCargo" />
+            </Principal>
+            <Dependent Role="Empleado">
+              <PropertyRef Name="idCargo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Proyecto_Empleado_Empleado">
+          <End Role="Empleado" Type="Self.Empleado" Multiplicity="1" />
+          <End Role="Proyecto_Empleado" Type="Self.Proyecto_Empleado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empleado">
+              <PropertyRef Name="idEmpleado" />
+            </Principal>
+            <Dependent Role="Proyecto_Empleado">
+              <PropertyRef Name="idEmpleado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Proyecto_Empleado_Proyecto">
+          <End Role="Proyecto" Type="Self.Proyecto" Multiplicity="1" />
+          <End Role="Proyecto_Empleado" Type="Self.Proyecto_Empleado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Proyecto">
+              <PropertyRef Name="idProyecto" />
+            </Principal>
+            <Dependent Role="Proyecto_Empleado">
+              <PropertyRef Name="idProyecto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DatosEmpleadosModelStoreContainer">
+          <EntitySet Name="Cargo" EntityType="Self.Cargo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Empleado" EntityType="Self.Empleado" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Proyecto" EntityType="Self.Proyecto" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Proyecto_Empleado" EntityType="Self.Proyecto_Empleado" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Menus" EntityType="Self.Menus" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Menus].[idMenu] AS [idMenu], 
+    [Menus].[idPadre] AS [idPadre], 
+    [Menus].[nombre] AS [nombre], 
+    [Menus].[url] AS [url], 
+    [Menus].[controlador] AS [controlador], 
+    [Menus].[accion] AS [accion], 
+    [Menus].[visible] AS [visible]
+    FROM [dbo].[Menus] AS [Menus]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Empleado_Cargo" Association="Self.FK_Empleado_Cargo">
+            <End Role="Cargo" EntitySet="Cargo" />
+            <End Role="Empleado" EntitySet="Empleado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Proyecto_Empleado_Empleado" Association="Self.FK_Proyecto_Empleado_Empleado">
+            <End Role="Empleado" EntitySet="Empleado" />
+            <End Role="Proyecto_Empleado" EntitySet="Proyecto_Empleado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Proyecto_Empleado_Proyecto" Association="Self.FK_Proyecto_Empleado_Proyecto">
+            <End Role="Proyecto" EntitySet="Proyecto" />
+            <End Role="Proyecto_Empleado" EntitySet="Proyecto_Empleado" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DatosEmpleadosModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Cargo">
+          <Key>
+            <PropertyRef Name="idCargo" />
+          </Key>
+          <Property Name="idCargo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="salarioBase" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <NavigationProperty Name="Empleado" Relationship="Self.FK_Empleado_Cargo" FromRole="Cargo" ToRole="Empleado" />
+        </EntityType>
+        <EntityType Name="Empleado">
+          <Key>
+            <PropertyRef Name="idEmpleado" />
+          </Key>
+          <Property Name="idEmpleado" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="dni" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="idCargo" Type="Int32" Nullable="false" />
+          <Property Name="salario" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="Cargo" Relationship="Self.FK_Empleado_Cargo" FromRole="Empleado" ToRole="Cargo" />
+          <NavigationProperty Name="Proyecto" Relationship="Self.Proyecto_Empleado" FromRole="Empleado" ToRole="Proyecto" />
+        </EntityType>
+        <EntityType Name="Proyecto">
+          <Key>
+            <PropertyRef Name="idProyecto" />
+          </Key>
+          <Property Name="idProyecto" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="cliente" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Empleado" Relationship="Self.Proyecto_Empleado" FromRole="Proyecto" ToRole="Empleado" />
+        </EntityType>
+        <EntityType Name="Menus">
+          <Key>
+            <PropertyRef Name="idMenu" />
+            <PropertyRef Name="nombre" />
+            <PropertyRef Name="url" />
+            <PropertyRef Name="controlador" />
+            <PropertyRef Name="accion" />
+            <PropertyRef Name="visible" />
+          </Key>
+          <Property Name="idMenu" Type="Int32" Nullable="false" />
+          <Property Name="idPadre" Type="Int32" />
+          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="url" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="controlador" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="accion" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="visible" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Empleado_Cargo">
+          <End Role="Cargo" Type="Self.Cargo" Multiplicity="1" />
+          <End Role="Empleado" Type="Self.Empleado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cargo">
+              <PropertyRef Name="idCargo" />
+            </Principal>
+            <Dependent Role="Empleado">
+              <PropertyRef Name="idCargo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Proyecto_Empleado">
+          <End Role="Empleado" Type="Self.Empleado" Multiplicity="*" />
+          <End Role="Proyecto" Type="Self.Proyecto" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="DatosEmpleadosEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Cargo" EntityType="Self.Cargo" />
+          <EntitySet Name="Empleado" EntityType="Self.Empleado" />
+          <EntitySet Name="Proyecto" EntityType="Self.Proyecto" />
+          <EntitySet Name="Menus" EntityType="Self.Menus" />
+          <AssociationSet Name="FK_Empleado_Cargo" Association="Self.FK_Empleado_Cargo">
+            <End Role="Cargo" EntitySet="Cargo" />
+            <End Role="Empleado" EntitySet="Empleado" />
+          </AssociationSet>
+          <AssociationSet Name="Proyecto_Empleado" Association="Self.Proyecto_Empleado">
+            <End Role="Empleado" EntitySet="Empleado" />
+            <End Role="Proyecto" EntitySet="Proyecto" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DatosEmpleadosModelStoreContainer" CdmEntityContainer="DatosEmpleadosEntities">
+          <EntitySetMapping Name="Cargo">
+            <EntityTypeMapping TypeName="DatosEmpleadosModel.Cargo">
+              <MappingFragment StoreEntitySet="Cargo">
+                <ScalarProperty Name="idCargo" ColumnName="idCargo" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="salarioBase" ColumnName="salarioBase" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Empleado">
+            <EntityTypeMapping TypeName="DatosEmpleadosModel.Empleado">
+              <MappingFragment StoreEntitySet="Empleado">
+                <ScalarProperty Name="idEmpleado" ColumnName="idEmpleado" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="dni" ColumnName="dni" />
+                <ScalarProperty Name="idCargo" ColumnName="idCargo" />
+                <ScalarProperty Name="salario" ColumnName="salario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Proyecto">
+            <EntityTypeMapping TypeName="DatosEmpleadosModel.Proyecto">
+              <MappingFragment StoreEntitySet="Proyecto">
+                <ScalarProperty Name="idProyecto" ColumnName="idProyecto" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="cliente" ColumnName="cliente" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Menus">
+            <EntityTypeMapping TypeName="DatosEmpleadosModel.Menus">
+              <MappingFragment StoreEntitySet="Menus">
+                <ScalarProperty Name="idMenu" ColumnName="idMenu" />
+                <ScalarProperty Name="idPadre" ColumnName="idPadre" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="url" ColumnName="url" />
+                <ScalarProperty Name="controlador" ColumnName="controlador" />
+                <ScalarProperty Name="accion" ColumnName="accion" />
+                <ScalarProperty Name="visible" ColumnName="visible" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Proyecto_Empleado" TypeName="DatosEmpleadosModel.Proyecto_Empleado" StoreEntitySet="Proyecto_Empleado">
+            <EndProperty Name="Empleado">
+              <ScalarProperty Name="idEmpleado" ColumnName="idEmpleado" />
+            </EndProperty>
+            <EndProperty Name="Proyecto">
+              <ScalarProperty Name="idProyecto" ColumnName="idProyecto" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

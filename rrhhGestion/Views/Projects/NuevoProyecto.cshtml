@@ -1,0 +1,27 @@
+﻿@using rrhhGestion.Models.ViewModels;
+@model rrhhGestion.Models.ViewModels.ProjectViewModel
+
+@{
+    ViewBag.Title = "Nuevo Proyecto";
+}
+
+<h2>Nuevo Proyecto</h2>
+
+@using (Html.BeginForm())
+{
+   
+    @Html.AntiForgeryToken()//Crea un campo oculto antifalsificación.
+    
+    @Html.LabelFor(o => o.nombre)
+    <input type="text" name="nombre" id="nombre"/>
+    <br/>
+    @Html.LabelFor(o => o.cliente)
+    <input type="text" name="cliente" id="cliente"/>
+    <br/>
+    @Html.LabelFor(o => o.descripcion)
+    <textarea rows="10" cols="100"></textarea>
+    <br/>
+    <button>Enviar</button>
+    
+}
+

@@ -1,0 +1,13 @@
+﻿@model List<rrhhGestion.Models.ViewModels.ProjectViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Listado de Proyectos</h2>
+
+<button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+    Crear Nuevo Proyecto
+</button>
+
+@Html.Partial("_PartialBox",)
